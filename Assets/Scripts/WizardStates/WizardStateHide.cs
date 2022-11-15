@@ -4,10 +4,12 @@ public class WizardStateHide : WizardState
 {
     private bool isShotting = false;
     private GameObject attackedTarget;
+    private bool healed;
 
     void Start()
     {
         regenerationRythm = 0.3f;
+        healed = false;
     }
 
     public override void MoveWizard()
@@ -20,9 +22,15 @@ public class WizardStateHide : WizardState
 
     public override void RegenWizard()
     {
-        if (!isShotting)
+        if (!isShotting && gameObject.activeSelf)
         {
-            RegenerateHealth();
+            regenerationTime += Time.deltaTime;
+            if (regenerationTime > regenerationRythm)
+            {
+                wizardManager.Heal(10);
+                regenerationTime = 0;
+                healed = true;
+            }
         }
     }
 
@@ -35,6 +43,11 @@ public class WizardStateHide : WizardState
         if (wizardManager.GetHealth() == wizardManager.GetBaseHealth())
         {
             wizardManager.ChangeWizardState(WizardManager.WizardStateToSwitch.Normal);
+        }
+        if (wizardManager.GetHealth() < wizardManager.GetBaseHealth() / 4 && healed)
+        {
+            wizardManager.ChangeWizardState(WizardManager.WizardStateToSwitch.Flee);
+            wizardManager.SetTargetToRemoveFromPool();
         }
     }
 

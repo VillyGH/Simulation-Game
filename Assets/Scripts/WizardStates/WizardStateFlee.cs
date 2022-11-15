@@ -27,12 +27,7 @@ public class WizardStateFlee : WizardState
 
     public override void RegenWizard()
     {
-        regenerationTime += Time.deltaTime;
-        if (regenerationTime > regenerationRythm)
-        {
-            wizardManager.Heal(10);
-            regenerationTime = 0;
-        }
+        RegenerateHealth();
     }
 
     public override void ManageStateChange()

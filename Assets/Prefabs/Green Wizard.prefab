@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 2332057961697881468}
   - component: {fileID: 2332057961697881459}
   - component: {fileID: -4920259499484960150}
-  - component: {fileID: 1565199832700801369}
   - component: {fileID: 1881627144178823266}
+  - component: {fileID: 1565199832700801369}
   - component: {fileID: 3094670767322823691}
   - component: {fileID: 5314658157995214002}
   - component: {fileID: 5830598654464632480}
@@ -102,25 +102,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bba3db0506c2b8a4c90d91e5de47fc92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1565199832700801369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2332057961697881469}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1de65cd9e79ffbe4b9ac8aef984f7fe4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
-  target: {fileID: 0}
-  health: 250
-  baseHealth: 250
-  maxDamage: 50
-  kills: 0
-  logStateSwitch: 0
 --- !u!114 &1881627144178823266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,7 +114,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d818cce166e984a8e5ce9159e883e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 0}
+  projectile: {fileID: 1300794350979569916, guid: 045a143c2616bbc48bfdf4779a5ac750, type: 3}
+--- !u!114 &1565199832700801369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2332057961697881469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1de65cd9e79ffbe4b9ac8aef984f7fe4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 2592815367579799673, guid: d56d9320d7f2c2e4a9636cee7c2b313d, type: 3}
+  target: {fileID: 0}
+  health: 250
+  baseHealth: 250
+  maxDamage: 50
+  kills: 0
+  logStateSwitch: 0
 --- !u!70 &3094670767322823691
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

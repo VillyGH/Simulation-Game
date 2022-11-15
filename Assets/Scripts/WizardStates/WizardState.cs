@@ -32,11 +32,14 @@ public abstract class WizardState : MonoBehaviour
 
     public void RegenerateHealth()
     {
-        regenerationTime += Time.deltaTime;
-        if (regenerationTime > regenerationRythm)
+        if(gameObject.activeSelf)
         {
-            wizardManager.Heal(10);
-            regenerationTime = 0;
+            regenerationTime += Time.deltaTime;
+            if (regenerationTime > regenerationRythm)
+            {
+                wizardManager.Heal(10);
+                regenerationTime = 0;
+            }
         }
     }
 

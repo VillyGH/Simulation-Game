@@ -120,14 +120,17 @@ public class GameManager : MonoBehaviour
 
     private void SpawnEnemy()
     {
-        GameObject blueEnemy = GetFirstInactiveEnemy(blueEnemies);
-        GameObject greenEnemy = GetFirstInactiveEnemy(greenEnemies);
-        if (blueEnemy != null && greenEnemy != null && blueSpawners.Count != 0 && greenSpawners.Count != 0 && blueEnemy.activeSelf && greenEnemy.activeSelf)
+        if (blueSpawners.Count != 0 && greenSpawners.Count != 0)
         {
-            blueEnemy.transform.position = blueSpawners[Random.Range(0, blueSpawners.Count - 1)].transform.position + (transform.up * 2);
-            greenEnemy.transform.position = greenSpawners[Random.Range(0, greenSpawners.Count - 1)].transform.position + (transform.up * 2);
-            blueEnemyCount++;
-            greenEnemyCount++;
+            GameObject blueEnemy = GetFirstInactiveEnemy(blueEnemies);
+            GameObject greenEnemy = GetFirstInactiveEnemy(greenEnemies);
+            if (blueEnemy != null && greenEnemy != null && blueEnemy.activeSelf && greenEnemy.activeSelf)
+            {
+                blueEnemy.transform.position = blueSpawners[Random.Range(0, blueSpawners.Count - 1)].transform.position + (transform.up * 2);
+                greenEnemy.transform.position = greenSpawners[Random.Range(0, greenSpawners.Count - 1)].transform.position + (transform.up * 2);
+                blueEnemyCount++;
+                greenEnemyCount++;
+            }
         }
     }
 
@@ -144,15 +147,41 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
+    public GameObject GetOneOfLastEnemiesAlive(string tag)
+    {
+        GameObject[] enemies;
+        if(tag == "WizardBlue")
+        {
+            enemies = blueEnemies;
+        } else
+        {
+            enemies = greenEnemies;
+        }
+        for (int i = 0; i < maxEnemiesEachTeam; i++)
+        {
+            if (enemies[i].activeInHierarchy)
+            {
+                return enemies[i];
+            }
+        }
+        return null;
+    }
+
     public void DecreaseEnemyCount(string tag)
     {
         if (tag == "WizardBlue")
         {
-            blueEnemyCount--;
+            if(blueEnemyCount >= 1)
+            {
+                blueEnemyCount--;
+            }
         }
         else
         {
-            greenEnemyCount--;
+            if (greenEnemyCount >= 1)
+            {
+                greenEnemyCount--;
+            }
         }
         WriteEnemyCount(tag);
     }

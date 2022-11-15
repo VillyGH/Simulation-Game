@@ -43,12 +43,7 @@ public class WizardStateIntrepid : WizardState
 
     public override void RegenWizard()
     {
-        regenerationTime += Time.deltaTime;
-        if (regenerationTime > regenerationRythm)
-        {
-            wizardManager.Heal(10);
-            regenerationTime = 0;
-        }
+        RegenerateHealth();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -61,7 +56,7 @@ public class WizardStateIntrepid : WizardState
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.activeInHierarchy && IsGameObjectEnemy(other) && isAttacked)
+        if (other.gameObject.activeInHierarchy && IsGameObjectEnemy(other) && (isAttacked || other.CompareTag("BlueSpawner") || other.CompareTag("GreenSpawner")))
         {
             if (!attackedTarget)
             {
@@ -82,8 +77,5 @@ public class WizardStateIntrepid : WizardState
         }
     }
 
-    public override void ManageStateChange()
-    {
-
-    }
+    public override void ManageStateChange(){}
 }
