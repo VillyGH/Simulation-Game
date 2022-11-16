@@ -7,10 +7,13 @@ public class WizardStateIntrepid : WizardState
     private bool isShotting = false;
     private GameObject attackedTarget;
     private bool isAttacked = false;
+    private new readonly float speed = 3.25f;
     void Start()
     {
-        speed = 3.25f;
+        wizardManager.SetSpeed(speed);
         wizardManager.SetTargetToRandom(wizardManager.GetAllTargetsByType(gameObject.tag, false));
+        wizardManager.SetMaxDamage(55);
+        spriteRenderer.color = Color.yellow;
     }
 
     //SI JAMAIS L'UPDATE DE VOTRE ÉTAT DEVIENT DIFFÉRENT DE CELUI DE BASE
@@ -28,7 +31,7 @@ public class WizardStateIntrepid : WizardState
             if (wizardManager.GetTarget().activeSelf)
             {
                 LookAt(wizardManager.GetTarget());
-                transform.position = Vector3.MoveTowards(transform.position, wizardManager.GetTarget().transform.position, speed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, wizardManager.GetTarget().transform.position, wizardManager.GetSpeed() * Time.deltaTime);
             }
             else
             {
@@ -37,7 +40,7 @@ public class WizardStateIntrepid : WizardState
         }
         else
         {
-            wizardShoot.FireBullet(gameObject);
+            wizardShoot.FireBullet(gameObject, false);
         }
     }
 
@@ -48,7 +51,7 @@ public class WizardStateIntrepid : WizardState
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.GetType() == typeof(CapsuleCollider2D))
+        if(innerCollider.Distance(collision).distance < 0.1f && collision.CompareTag("ProjectileBlue") || collision.CompareTag("ProjectileGreen"))
         {
             isAttacked = true;
         }
@@ -74,6 +77,12 @@ public class WizardStateIntrepid : WizardState
             attackedTarget = null;
             isAttacked = false;
             isShotting = false;
+        }
+
+        if (innerCollider.Distance(other).distance < 0.1f &&
+            other.CompareTag("GreenBush") || other.CompareTag("BlueBush"))
+        {
+            wizardManager.SetSpeed(speed);
         }
     }
 

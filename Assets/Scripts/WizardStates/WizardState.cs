@@ -8,8 +8,10 @@ public abstract class WizardState : MonoBehaviour
     //changez d'état: tout ceci sera réinitialisé.
     protected WizardManager wizardManager;
     protected WizardShoot wizardShoot;
+    protected CapsuleCollider2D innerCollider;
+    protected SpriteRenderer spriteRenderer;
 
-    protected float speed;
+    protected float speed = 2.5f;
     protected float regenerationRythm = 1f;
     protected float regenerationTime = 0f;
 
@@ -21,6 +23,8 @@ public abstract class WizardState : MonoBehaviour
     {
         wizardManager = GetComponent<WizardManager>();
         wizardShoot = GetComponent<WizardShoot>();
+        innerCollider = GetComponent<CapsuleCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()

@@ -15,7 +15,7 @@ public class Projectile : MonoBehaviour
     }
     private void Update()
     {
-        if (Mathf.Abs(transform.position.x) > 25f || Mathf.Abs(transform.position.y) > 10f)
+        if (Mathf.Abs(transform.position.x) > 25f || Mathf.Abs(transform.position.y) > 12f)
         {
             gameObject.SetActive(false);
         }

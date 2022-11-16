@@ -8,11 +8,12 @@ public class WizardStateNormal : WizardState
     private GameObject attackedTarget;
     void Start()
     {
-        speed = 2.5f;
+        wizardManager.SetSpeed(speed);
     }
 
     private void OnEnable()
     {
+        wizardManager.SetMaxDamage(50);
         wizardManager.SetTargetToRandom(wizardManager.GetAllTargetsByType(gameObject.tag, false));
     }
 
@@ -23,7 +24,7 @@ public class WizardStateNormal : WizardState
             if(wizardManager.GetTarget().activeSelf)
             {
                 LookAt(wizardManager.GetTarget());
-                transform.position = Vector3.MoveTowards(transform.position, wizardManager.GetTarget().transform.position, speed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, wizardManager.GetTarget().transform.position, wizardManager.GetSpeed() * Time.deltaTime);
             } else
             {
                 wizardManager.SetTargetToRandom(wizardManager.GetAllTargetsByType(gameObject.tag, false));
@@ -31,7 +32,7 @@ public class WizardStateNormal : WizardState
         }
         else
         {
-            wizardShoot.FireBullet(gameObject);
+            wizardShoot.FireBullet(gameObject, false);
         }
     }
 
@@ -74,6 +75,12 @@ public class WizardStateNormal : WizardState
         {
             attackedTarget = null;
             isShotting = false;
+        }
+
+        if (innerCollider.Distance(other).distance < 0.1f &&
+            other.CompareTag("GreenBush") || other.CompareTag("BlueBush"))
+        {
+            wizardManager.SetSpeed(speed);
         }
     }
 }

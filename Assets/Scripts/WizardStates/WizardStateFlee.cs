@@ -4,25 +4,17 @@ using UnityEngine;
 
 public class WizardStateFlee : WizardState
 {
-    // Start is called before the first frame update
+    private new readonly float speed = 3.25f;
     void Start()
     {
-        speed = 4f;
+        wizardManager.SetSpeed(speed);
         wizardManager.SetTargetToClosest(wizardManager.GetAllTargetsByType(gameObject.tag, true));
     }
-
-    //SI JAMAIS L'UPDATE DE VOTRE ÉTAT DEVIENT DIFFÉRENT DE CELUI DE BASE
-    //MASQUER L'UPDATE DE L'ÉTAT DE BASE AVEC VOTRE PROPRE UPDATE.
-    //void Update()
-    //{
-    //    MoveWizard();
-    //    ManageStateChange();
-    //}
 
     public override void MoveWizard()
     {
         LookAt(wizardManager.GetTarget());
-        transform.position = Vector3.MoveTowards(transform.position, wizardManager.GetTarget().transform.position, speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, wizardManager.GetTarget().transform.position, wizardManager.GetSpeed() * Time.deltaTime);
     }
 
     public override void RegenWizard()
@@ -42,6 +34,15 @@ public class WizardStateFlee : WizardState
             {
                 wizardManager.ChangeWizardState(WizardManager.WizardStateToSwitch.Safety);
             }
+        }
+    }
+
+    public void OnTriggerExit2D(Collider2D other)
+    {
+        if (innerCollider.Distance(other).distance < 0.1f &&
+            other.CompareTag("GreenBush") || other.CompareTag("BlueBush"))
+        {
+            wizardManager.SetSpeed(speed);
         }
     }
 }

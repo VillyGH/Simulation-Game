@@ -10,7 +10,7 @@ public class WizardShoot : MonoBehaviour
     private int maxMunitions = initMaxMunitions;
     private readonly Rigidbody2D[] munitions = new Rigidbody2D[initMaxMunitions];
 
-    private const float rateOfFire = 1.5f;
+    private float rateOfFire = 1.5f;
 
     private float rateOfFireTime;
 
@@ -37,8 +37,12 @@ public class WizardShoot : MonoBehaviour
     }
 
 
-    public void FireBullet(GameObject source)
+    public void FireBullet(GameObject source, bool upgraded)
     {
+        if(upgraded)
+        {
+            rateOfFire = 1.25f;
+        }
         if (rateOfFireTime <= 0f)
         {
             for (int i = 0; i < maxMunitions; i++)

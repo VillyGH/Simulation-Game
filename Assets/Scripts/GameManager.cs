@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     private GameObject greenWizard;
 
     [SerializeField]
-    private int maxEnemiesEachTeam;
+    private int maxEnemiesEachTeam = 40;
 
     [SerializeField]
     private float spawnRhythm = 2f;
@@ -111,25 +111,24 @@ public class GameManager : MonoBehaviour
         spawnTimer += Time.deltaTime;
         if (spawnTimer >= spawnRhythm)
         {
-            SpawnEnemy();
+            SpawnEnemy(blueEnemies, blueSpawners,"WizardBlue");
+            SpawnEnemy(greenEnemies, greenSpawners, "WizardGreen");
             WriteEnemyCount("WizardBlue");
             WriteEnemyCount("WizardGreen");
             spawnTimer = 0;
+            spawnRhythm += 0.05f;
         }
     }
 
-    private void SpawnEnemy()
+    private void SpawnEnemy(GameObject[] enemies, List<GameObject> spawners, string tag)
     {
-        if (blueSpawners.Count != 0 && greenSpawners.Count != 0)
+        if (spawners.Count != 0)
         {
-            GameObject blueEnemy = GetFirstInactiveEnemy(blueEnemies);
-            GameObject greenEnemy = GetFirstInactiveEnemy(greenEnemies);
-            if (blueEnemy != null && greenEnemy != null && blueEnemy.activeSelf && greenEnemy.activeSelf)
+            GameObject enemy = GetFirstInactiveEnemy(enemies);
+            if (enemy != null && enemy.activeSelf)
             {
-                blueEnemy.transform.position = blueSpawners[Random.Range(0, blueSpawners.Count - 1)].transform.position + (transform.up * 2);
-                greenEnemy.transform.position = greenSpawners[Random.Range(0, greenSpawners.Count - 1)].transform.position + (transform.up * 2);
-                blueEnemyCount++;
-                greenEnemyCount++;
+                enemy.transform.position = spawners[Random.Range(0, spawners.Count - 1)].transform.position + (transform.up * 2);
+                ChangeEnemyCount(tag, 1);
             }
         }
     }
@@ -152,10 +151,10 @@ public class GameManager : MonoBehaviour
         GameObject[] enemies;
         if(tag == "WizardBlue")
         {
-            enemies = blueEnemies;
+            enemies = greenEnemies;
         } else
         {
-            enemies = greenEnemies;
+            enemies = blueEnemies;
         }
         for (int i = 0; i < maxEnemiesEachTeam; i++)
         {
@@ -167,21 +166,15 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    public void DecreaseEnemyCount(string tag)
+    public void ChangeEnemyCount(string tag, int value)
     {
         if (tag == "WizardBlue")
         {
-            if(blueEnemyCount >= 1)
-            {
-                blueEnemyCount--;
-            }
+            blueEnemyCount += value;
         }
         else
         {
-            if (greenEnemyCount >= 1)
-            {
-                greenEnemyCount--;
-            }
+            greenEnemyCount += value;
         }
         WriteEnemyCount(tag);
     }

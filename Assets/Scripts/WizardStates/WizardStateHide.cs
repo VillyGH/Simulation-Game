@@ -3,20 +3,20 @@ using UnityEngine;
 public class WizardStateHide : WizardState
 {
     private bool isShotting = false;
-    private GameObject attackedTarget;
     private bool healed;
 
     void Start()
     {
-        regenerationRythm = 0.3f;
+        regenerationRythm = 0.6f;
         healed = false;
+        wizardManager.SetMaxDamage(55);
     }
 
     public override void MoveWizard()
     {
         if (isShotting)
         {
-            wizardShoot.FireBullet(gameObject);
+            wizardShoot.FireBullet(gameObject, true);
         }
     }
 
@@ -40,7 +40,7 @@ public class WizardStateHide : WizardState
         {
             wizardManager.ChangeWizardState(WizardManager.WizardStateToSwitch.Intrepid);
         }
-        if (wizardManager.GetHealth() == wizardManager.GetBaseHealth())
+        if (wizardManager.GetHealth() == wizardManager.GetBaseHealth() || (wizardManager.GetHealth() >= 65 / 100 && isShotting))
         {
             wizardManager.ChangeWizardState(WizardManager.WizardStateToSwitch.Normal);
         }
@@ -53,13 +53,9 @@ public class WizardStateHide : WizardState
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.gameObject.activeInHierarchy && IsGameObjectEnemy(other) && wizardManager.GetHealth() >= wizardManager.GetBaseHealth() * 65 / 100)
+        if (other.gameObject.activeInHierarchy && IsGameObjectEnemy(other))
         {
-            if (!attackedTarget)
-            {
-                attackedTarget = other.gameObject;
-            }
-            LookAt(attackedTarget);
+            LookAt(other.gameObject);
             isShotting = true;
         }
     }
@@ -68,7 +64,6 @@ public class WizardStateHide : WizardState
     {
         if (IsGameObjectEnemy(other))
         {
-            attackedTarget = null;
             isShotting = false;
         }
     }

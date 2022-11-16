@@ -24,6 +24,9 @@ public class WizardManager : MonoBehaviour
     [SerializeField]
     private bool logStateSwitch = false;
 
+    [SerializeField]
+    private float speed = 1.0f;
+
     private bool removeBushes;
 
     public enum WizardStateToSwitch { Normal, Intrepid, Flee, Hide, Safety }
@@ -32,15 +35,20 @@ public class WizardManager : MonoBehaviour
 
     private CapsuleCollider2D innerCollider;
 
+    private SpriteRenderer spriteRenderer;
+
     public void Awake()
     {
         gameObject.SetActive(false);
         wizardState = GetComponent<WizardState>();
         innerCollider = GetComponent<CapsuleCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void OnEnable()
     {
+        kills = 0;
+        spriteRenderer.color = Color.white;
         health = baseHealth;
         ChangeWizardState(WizardStateToSwitch.Normal);
     }
@@ -109,7 +117,8 @@ public class WizardManager : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (innerCollider.Distance(collision).distance < 0.1f && (CompareTag("WizardGreen") && collision.CompareTag("ProjectileBlue") || (CompareTag("WizardBlue") && collision.CompareTag("ProjectileGreen"))))
+        if (innerCollider.Distance(collision).distance < 0.1f && 
+            (CompareTag("WizardGreen") && collision.CompareTag("ProjectileBlue") || (CompareTag("WizardBlue") && collision.CompareTag("ProjectileGreen"))))
         {
             health -= GetDamage();
             if (health <= 0)
@@ -118,7 +127,19 @@ public class WizardManager : MonoBehaviour
                 health = 0;
             }
         }
+        if (innerCollider.Distance(collision).distance < 0.1f &&
+            CompareTag("WizardGreen") && collision.CompareTag("GreenBush") || (CompareTag("WizardBlue") && collision.CompareTag("BlueBush")))
+        {
+            speed += 1f;
+        }
+        else if (innerCollider.Distance(collision).distance < 0.1f &&
+          CompareTag("WizardGreen") && collision.CompareTag("BlueBush") || (CompareTag("WizardBlue") && collision.CompareTag("GreenBush")))
+        {
+            speed -= 0.5f;
+        }
     }
+
+    
 
     public int GetDamage()
     {
@@ -128,7 +149,7 @@ public class WizardManager : MonoBehaviour
     public void Die(Projectile projectile)
     {
         projectile.GetSource().GetComponent<WizardManager>().AddKill();
-        gameManager.DecreaseEnemyCount(tag);
+        gameManager.ChangeEnemyCount(tag, -1);
         Destroy(wizardState);
         gameObject.SetActive(false);
     }
@@ -143,13 +164,11 @@ public class WizardManager : MonoBehaviour
         List<GameObject> targets = gameManager.GetAllTargetsByType(tag, cover);
         if (removeBushes)
         {
-            Debug.Log(targets.Count);
             for (int i = 0; i < targets.Count; i++)
             {
                 if(targets[i].CompareTag("BlueBush") || targets[i].CompareTag("GreenBush"))
                 {
                     targets.Remove(targets[i]);
-                    Debug.Log(targets[i].tag);
                 }
             }
         }
@@ -219,5 +238,20 @@ public class WizardManager : MonoBehaviour
     public int GetBaseHealth()
     {
         return baseHealth;
+    }
+
+    public void SetMaxDamage(int maxDamage)
+    {
+        this.maxDamage = maxDamage;
+    }
+
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
+    public float GetSpeed()
+    {
+        return this.speed;
     }
 }
